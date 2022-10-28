@@ -4,7 +4,7 @@ from detector import Detector
 
 def main():
     video_path = 'video\Traffic-27260.mp4'
-    # video_path = 0
+    # video_path = 0 # Use video feed from device primary camera
     config_path = os.path.join('model',
                                'ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt')
     model_path = os.path.join('model', 'frozen_inference_graph.pb')
