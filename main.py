@@ -3,7 +3,7 @@ from detector import Detector
 
 
 def main():
-    video_path = 'video\Traffic-31967.mp4'
+    video_path = 'video\Traffic-27260.mp4'
     # video_path = 0
     config_path = os.path.join('model',
                                'ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt')
