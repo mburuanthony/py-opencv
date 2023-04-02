@@ -4,19 +4,13 @@ import cv2
 np.random.seed(20)
 
 
-class Detector:
-    """
-    \nvideoPath -> path to video(file/real-time captured)
-    \nconfigPath -> path to ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt
-    \nmodelPath -> path to frozen_inference_graph.pb
-    \nclassesPath -> path to coco.names
-    """
-
+class Detector():
     def __init__(self, videoPath, configPath, modelPath, classesPath):
         self.videoPath = videoPath
         self.configPath = configPath
         self.modelPath = modelPath
         self.classesPath = classesPath
+        self.objectclasslabel = str()
 
         # setup detection model
         self.net_model = cv2.dnn_DetectionModel(
@@ -46,7 +40,7 @@ class Detector:
         success, image = vid.read()
 
         while success:
-            # self.net_model.detect returns -> class labels (item), confidence levels, bounding boxes
+            # self.net_model.detect -> class labels (item), confidence levels, bounding boxes
             classLabelIDS, confidences, bboxs = self.net_model.detect(
                 image, confThreshold=0.5)
 
@@ -63,6 +57,7 @@ class Detector:
                     class_label_id = np.squeeze(
                         classLabelIDS[np.squeeze(bboxIDx[i])])
                     class_label = self.classesList[class_label_id]
+                    self.objectclasslabel = class_label
 
                     # get random color for each bounding box
                     class_color = [int(c)
@@ -101,6 +96,10 @@ class Detector:
                     cv2.line(image, (x+w, y+h),
                              (x+w, y+h-line_width), class_color, 5)
 
+            cv2.namedWindow('object-detection', cv2.WINDOW_NORMAL)
+            cv2.resizeWindow('object-detection', 800, 800)
+            # cv2.setWindowProperty(
+            # 'object-detection', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
             cv2.imshow('object-detection', image)
 
             key = cv2.waitKey(1) & 0xFF
@@ -109,3 +108,6 @@ class Detector:
 
             success, image = vid.read()
         cv2.destroyAllWindows()
+
+    def stop(self):
+        self.stopped = True
